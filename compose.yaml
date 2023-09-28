@@ -1,0 +1,38 @@
+version: "3"
+services:
+  golang:
+    container_name: app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    networks:
+      - backend
+    depends_on:
+      - postgres
+    ports:
+      - "8080:8080"
+      
+
+  postgres:
+    container_name: postgres_go
+    image: postgres
+    environment:
+      POSTGRES_USER: super_admin
+      POSTGRES_PASSWORD: SomeSecretPassword
+      DB_NAME: postgres
+      PGDATA: /data/postgres
+    volumes:
+      - postgres-db:/data/postgres
+    ports:
+      - "5432:5432"
+    networks:
+      - backend
+
+volumes:
+  postgres-db:
+    driver: local
+
+networks:
+  backend:
+    external: true
+
